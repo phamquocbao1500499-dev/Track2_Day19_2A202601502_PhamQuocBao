@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 # Full Docker path: Qdrant server + Redis online store + Postgres offline store.
 # Same Python venv as lite + the docker extras. ~3-5 min on first run (image pulls).
 
@@ -11,7 +11,7 @@ echo "[docker]       downloads ~2.2 GB on first use. Set EMBEDDING_BACKEND=faste
 echo "[docker]       in .env to keep the light 384-dim English model."
 echo
 
-# ── 1. Runtime preflight ────────────────────────────────────────────────
+# â”€â”€ 1. Runtime preflight â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 # Three runtimes are plausible now. Apple's `container` has no compose
 # implementation, so it gets its own start path (scripts/container-up.sh).
 # `bash scripts/runtime-check.sh` prints the full picture.
@@ -55,7 +55,7 @@ else
                   or  docker compose down -v (full reset)"
 fi
 
-# ── 3. Python venv (same as lite) ───────────────────────────────────────
+# â”€â”€ 3. Python venv (same as lite) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if [ ! -d ".venv" ]; then
   if command -v uv >/dev/null 2>&1; then
     uv venv .venv
@@ -66,7 +66,7 @@ fi
 # shellcheck source=/dev/null
 source .venv/bin/activate
 
-# ── 4. Install lite + docker extras ─────────────────────────────────────
+# â”€â”€ 4. Install lite + docker extras â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 NEED_DILL_OVERRIDE=$(python -c 'import sys; print(1 if sys.version_info >= (3,14) else 0)')
 if [ "$NEED_DILL_OVERRIDE" = "1" ]; then
   echo "[docker] venv Python >= 3.14 -> applying dill>=0.4 override (see requirements.txt)"
@@ -88,10 +88,10 @@ fi
 # `_setup.py` is a helper module, not a notebook (see setup-lite.sh).
 jupytext --to notebook --update notebooks/[0-9]*.py 2>/dev/null || jupytext --to notebook notebooks/[0-9]*.py
 
-# ── 5. .env for docker mode ─────────────────────────────────────────────
+# â”€â”€ 5. .env for docker mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 if [ ! -f .env ]; then
   cp .env.example .env
-  # Flip the lite defaults to docker — the user can edit afterward.
+  # Flip the lite defaults to docker â€” the user can edit afterward.
   sed -i.bak \
     -e 's/^QDRANT_MODE=memory/QDRANT_MODE=server/' \
     -e 's/^EMBEDDING_BACKEND=fastembed/EMBEDDING_BACKEND=bge-m3/' \
@@ -101,12 +101,12 @@ if [ ! -f .env ]; then
   rm -f .env.bak
 fi
 
-# ── 6. Seed corpus + smoke test ─────────────────────────────────────────
+# â”€â”€ 6. Seed corpus + smoke test â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 python scripts/seed_corpus.py
 
 # Advanced missions (NB6 compound queries, NB8 spend parquet). setup-lite.sh
 # does this too; without it NB6 dies on a missing data/agent_queries.jsonl.
-echo "  · seeding advanced-mission data (NB6 + NB8)…"
+echo "  Â· seeding advanced-mission data (NB6 + NB8)â€¦"
 python scripts/gen_agent_queries.py
 python scripts/gen_spend.py
 python scripts/verify_docker.py
@@ -115,9 +115,9 @@ cat <<EOF
 
 [docker] Done. Services running:
 
-  Qdrant   → http://localhost:6333  (dashboard)
-  Redis    → redis://localhost:6379
-  Postgres → postgresql://feast:feast@localhost:5432/feast_offline
+  Qdrant   â†’ http://localhost:6333  (dashboard)
+  Redis    â†’ redis://localhost:6379
+  Postgres â†’ postgresql://feast:feast@localhost:5432/feast_offline
 
 Activate the venv and continue:
 

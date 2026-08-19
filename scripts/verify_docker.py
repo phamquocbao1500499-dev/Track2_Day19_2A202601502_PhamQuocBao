@@ -54,7 +54,7 @@ def main() -> int:
         step("Postgres reachable on :5432")
         assert can_reach("localhost", 5432), "Postgres not reachable."
         import psycopg
-        with psycopg.connect("postgresql://feast:feast@localhost:5432/feast_offline") as conn:
+        with psycopg.connect("postgresql://feast:feast@localhost:5433/feast_offline") as conn:
             with conn.cursor() as cur:
                 cur.execute("SELECT 1")
                 assert cur.fetchone() == (1,)
