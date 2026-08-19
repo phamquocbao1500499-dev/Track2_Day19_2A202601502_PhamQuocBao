@@ -86,6 +86,9 @@ def percentile(values: list[float], p: float) -> float:
 
 
 def benchmark_mode(mode: str, reps: int = 2) -> dict[str, float]:
+    # Warm-up: 10 queries to load model into cache
+    for q in golden[:10]:
+        httpx.get(f"{URL}/search", params={"q": q["query"], "mode": mode}, timeout=10.0)
     server_latencies: list[float] = []
     wall_latencies: list[float] = []
     for _ in range(reps):
